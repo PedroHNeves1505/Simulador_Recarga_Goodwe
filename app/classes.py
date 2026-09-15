@@ -1,137 +1,8 @@
-import os
-import sys
-import time as tm
+from datetime import datetime
 import random
 import json
-from datetime import datetime, time, timedelta
-
-usuarios = [{'email': 'p@email', 'senha': '123'}]
-
-os.system('cls' if os.name == 'nt' else 'clear')
-print('Iniciando Sistema HCA G2...')
-
-print('\n' + ('=~' * 20))
-print('1 - Já possuo uma conta.')
-print('2 - Criar conta.')
-try:
-	escolha_usuario = int(input('Escolha a opção: '))
-except ValueError:
-	print('Entrada inválida! Digite 1 ou 2.')
-	sys.exit()
-
-while escolha_usuario not in [1, 2]:
-	print('Opção inválida!')
-	input('Digite qualquer tecla para continuar: ')
-	os.system('cls' if os.name == 'nt' else 'clear')
-	print('=~' * 20)
-	print('1 - Já possuo uma conta.')
-	print('2 - Criar conta')
-	try:
-		escolha_usuario = int(input('Escolha a opção: '))
-	except ValueError:
-		print('Entrada inválida! Digite 1 ou 2.')
-		sys.exit()
-
-if escolha_usuario == 2:
-	usuario = {}
-
-	print('Antes de iniciar a criação da conta, certifique-se que o PowerGrid esteja conectado a uma rede Wi-Fi!\n')
-
-	os.system('cls' if os.name == 'nt' else 'clear')
-	print('PERFIL DO USUÀRIO')
-	print('=~' * 20)
-	criar_email = input('Digite seu e-mail: ')
-	criar_senha = input('Digite a senha: ')
-	conf_senha = input('Digite novamente a senha: ')
-
-	if criar_senha != conf_senha:
-		while criar_senha != conf_senha:
-			print('Senhas diferentes! Corrija.')
-			criar_senha = input('Digite a senha: ')
-			conf_senha = input('Digite novamente a senha: ')
-
-	os.system('cls' if os.name == 'nt' else 'clear')
-	print('INFORMAÇÕES DO DISPOSITIVO')
-	print('=~' * 20)
-	endereco = input('Digite o endereço da instalção do carrgador: ')
-	num_serie = input('Digite o número de série: ')
-	cod_verificacao = input('Digite o código de verificação: ')
-	tipo_estacao = input('Digite o tipo de estação: ')
-
-	usuario['email'] = criar_email
-	usuario['senha'] = criar_senha
-	usuario['endereço'] = endereco
-	usuario['número de série'] = num_serie
-	usuario['código de verificação'] = cod_verificacao
-	usuario['tipo de estação'] = tipo_estacao
-	usuarios.append(usuario)
-	print('Conta criada com sucesso!')
-	tm.sleep(5) 
-else:
-	pass
-
-entrar = False
-
-while not entrar:
-	os.system('cls' if os.name == 'nt' else 'clear')
-	print('Entrar na conta.')
-	entrar_email = input('Digite seu e-mail: ')
-	entrar_senha = input('Digite a senha: ')
-
-	conf_entrar_email = False
-	conf_entrar_senha = False
-
-	for usuario in usuarios:
-		if entrar_email == usuario['email']:
-			conf_entrar_email = True
-			if entrar_senha == usuario['senha']:
-				conf_entrar_senha = True
-				break
-	if conf_entrar_email == True and conf_entrar_senha == True:
-		entrar = True
-	else:       
-		encerrar = False    
-		while not encerrar:
-			novamente = input('e-mail ou senha incorretas! Deseja tentar novamente(sim, não): ')
-			if novamente.lower() == 'sim':
-				break
-			elif novamente.lower() == 'não':
-				print('Saindo do sistema.')
-				tm.sleep(5)
-				sys.exit()
-			else:
-				print('repsosta não válida, tente novamente.')
-				tm.sleep(1)
-
-os.system('cls' if os.name == 'nt' else 'clear')
-print('Entrada bem sucedida!')
-
-tm.sleep(5)
-
-
-def obter_tipo_fluxo(dia_semana, hora_atual):
-	if dia_semana < 5:
-		if (hora_atual >= time(22, 0) or hora_atual < time(7, 0)) or (time(9, 0) <= hora_atual < time(11, 0)): return "BAIXA"
-		elif (time(7, 0) <= hora_atual < time(9, 0)) or (time(14, 0) <= hora_atual < time(17, 0)): return "MEDIANO"
-		elif (time(12, 0) <= hora_atual < time(14, 0)) or (time(17, 0) <= hora_atual < time(21, 0)): return "PICO"
-		else: return "REGULAR"
-	else:
-		if (hora_atual >= time(22, 0) or hora_atual < time(9, 0)): return "BAIXA"
-		elif (time(9, 0) <= hora_atual < time(13, 0)) or (time(20, 0) <= hora_atual < time(22, 0)): return "MEDIANO"
-		elif (time(14, 0) <= hora_atual < time(20, 0)): return "PICO"
-		else: return "REGULAR"
-
-def calcular_tarifa_inteligente(data_hora, preco_base_kwh=1.50):
-	dia_semana = data_hora.weekday()
-	hora_atual = data_hora.time()
-	fluxo = obter_tipo_fluxo(dia_semana, hora_atual)
-	is_janela_goodwe = time(10, 0) <= hora_atual <= time(14, 0)
-	if fluxo == "PICO": fator = 1.25 if is_janela_goodwe else 1.40
-	elif fluxo == "MEDIANO": fator = 0.85 if is_janela_goodwe else 1.00
-	elif fluxo == "BAIXA": fator = 0.70 if is_janela_goodwe else 0.90
-	else: fator = 0.85 if is_janela_goodwe else 1.00
-	return {"fluxo": fluxo, "geracao_solar": is_janela_goodwe, "preco_final_kwh": round(preco_base_kwh * fator, 2)}
-
+import time as tm
+from app.functions import calcular_tarifa_inteligente, apagar_terminal
 
 class SessaoRecarga:
 	def __init__(self, id_sessao, veiculo, bateria_inicial):
@@ -173,7 +44,7 @@ class GerenciadorEstacoes:
 		self.sessoes = {}
 		self.potencia_maxima_rede = potencia_maxima_rede
 		self.contador_ids = 1
-		with open('veiculos.json', 'r', encoding='utf-8') as arquivo:
+		with open('app/veiculos.json', 'r', encoding='utf-8') as arquivo:
 			self.lista_veiculos = json.load(arquivo)
 
 	def adicionar_veiculo(self):
@@ -195,7 +66,7 @@ class GerenciadorEstacoes:
 		"""CRITÉRIO 6: Visualização dinâmica em tempo real com opção de voltar"""
 		try:
 			while True:
-				os.system('cls' if os.name == 'nt' else 'clear')
+				apagar_terminal()
 				self.atualizar_todas_as_sessoes() 
 				
 				sessoes_ativas = [s for s in self.sessoes.values() if s.status == "Carregando"]
@@ -234,7 +105,7 @@ class GerenciadorEstacoes:
 		print("🔌 [OCPP IN] Confirmação recebida: [3, \"SUCCESS\"]")
 
 	def pagar_e_liberar_vaga(self):
-		os.system('cls' if os.name == 'nt' else 'clear')
+		apagar_terminal()
 		self.atualizar_todas_as_sessoes() 
 		sessoes_ativas = [id_s for id_s, s in self.sessoes.items() if s.status in ["Carregando", "Concluído"]]
 		
@@ -266,7 +137,7 @@ class GerenciadorEstacoes:
 		preco_kwh = dados_tarifa['preco_final_kwh']
 		custo_total = sessao.energia_injetada * preco_kwh
 
-		os.system('cls' if os.name == 'nt' else 'clear')
+		apagar_terminal()
 		print('='*15 + ' RECIBO DE PAGAMENTO ' + '='*15)
 		print(f"Veículo:          {sessao.marca} {sessao.modelo}")
 		print(f"Energia Injetada: {sessao.energia_injetada:.2f} kWh")
@@ -289,41 +160,10 @@ class GerenciadorEstacoes:
 			print("\n❌ Operação cancelada.")
 
 	def gerar_relatorio_financeiro(self):
-		os.system('cls' if os.name == 'nt' else 'clear')
+		apagar_terminal()
 		self.atualizar_todas_as_sessoes()
 		print('='*15 + ' RELATÓRIO FINAL E EMISSÃO DE NOTA ' + '='*15)
 		for id_s, s in self.sessoes.items():
 			tarifa = calcular_tarifa_inteligente(datetime.now())['preco_final_kwh']
 			print(f"\n[Vaga #{id_s}] {s.marca} {s.modelo} -> Consumo: {s.energia_injetada:.2f} kWh | Total: R$ {s.energia_injetada * tarifa:.2f}")
 		input("\nPressione Enter para continuar...")
-
-os.system('cls' if os.name == 'nt' else 'clear')
-print("🔑 Login efetuado automaticamente para simulação.")
-gerenciador = GerenciadorEstacoes(potencia_maxima_rede=40.0)
-
-while True:
-	os.system('cls' if os.name == 'nt' else 'clear')
-	print("="*15 + " PANEL CONTROL HCA G2 " + "="*15)
-	print("1. Conectar/Simular Entrada de Carro")
-	print("2. Ver Carregamento em Tempo Real (Monitoramento)")
-	print("3. Pagar e Liberar Vaga (Checkout)")
-	print("4. Emitir Relatório Geral de Faturamento")
-	print("5. Sair do Sistema")
-	print("="*52)
-	
-	opcao = input("Escolha a opção: ")
-	if opcao == "1":
-		gerenciador.adicionar_veiculo()
-		input("\nPressione Enter para voltar ao menu...")
-	elif opcao == "2":
-		gerenciador.monitorar_tempo_real()
-	elif opcao == "3":
-		gerenciador.pagar_e_liberar_vaga()
-	elif opcao == "4":
-		gerenciador.gerar_relatorio_financeiro()
-	elif opcao == "5":
-		print("Encerrando aplicação...")
-		break
-	else:
-		print("Opção inválida! Escolha de 1 a 5.")
-		tm.sleep(1)
