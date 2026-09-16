@@ -70,14 +70,6 @@ def entrar_no_sistema():
                 criar_senha = input('Digite a senha: ')
                 conf_senha = input('Digite novamente a senha: ')
 
-        apagar_terminal()
-        print('INFORMAÇÕES DO DISPOSITIVO')
-        print('=~' * 20)
-        endereco = input('Digite o endereço da instalação do carregador: ')
-        num_serie = input('Digite o número de série: ')
-        cod_verificacao = input('Digite o código de verificação: ')
-        tipo_estacao = input('Digite o tipo de estação: ')
-
         try:
             conexao = sqlite3.connect('usuarios.db')
             cursor = conexao.cursor()
@@ -168,8 +160,7 @@ def rodar_sistema(gerenciador):
 		print("1. Conectar/Simular Entrada de Carro")
 		print("2. Ver Carregamento em Tempo Real (Monitoramento)")
 		print("3. Pagar e Liberar Vaga (Checkout)")
-		print("4. Emitir Relatório Geral de Faturamento")
-		print("5. Sair do Sistema")
+		print("4. Sair do Sistema")
 		print("="*52)
 		
 		opcao = input("Escolha a opção: ")
@@ -181,10 +172,8 @@ def rodar_sistema(gerenciador):
 		elif opcao == "3":
 			gerenciador.pagar_e_liberar_vaga()
 		elif opcao == "4":
-			gerenciador.gerar_relatorio_financeiro()
-		elif opcao == "5":
 			print("Encerrando aplicação...")
 			break
 		else:
-			print("Opção inválida! Escolha de 1 a 5.")
+			print("Opção inválida! Escolha de 1 a 4.")
 			tm.sleep(1)

@@ -158,12 +158,3 @@ class GerenciadorEstacoes:
 			print(f"\n✅ Pagamento processado! Vaga #{vaga_escolhida} está LIVRE e desocupada.")
 		else:
 			print("\n❌ Operação cancelada.")
-
-	def gerar_relatorio_financeiro(self):
-		apagar_terminal()
-		self.atualizar_todas_as_sessoes()
-		print('='*15 + ' RELATÓRIO FINAL E EMISSÃO DE NOTA ' + '='*15)
-		for id_s, s in self.sessoes.items():
-			tarifa = calcular_tarifa_inteligente(datetime.now())['preco_final_kwh']
-			print(f"\n[Vaga #{id_s}] {s.marca} {s.modelo} -> Consumo: {s.energia_injetada:.2f} kWh | Total: R$ {s.energia_injetada * tarifa:.2f}")
-		input("\nPressione Enter para continuar...")
