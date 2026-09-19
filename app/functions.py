@@ -206,9 +206,26 @@ def busca_sequencial(vagas, vaga_procurada):
 
 def gerar_relatorio(gerenciador):
     apagar_terminal()
+    print("Atualizando dados das sessões...")
 
+    sessoes_ativas = [s for s in gerenciador.sessoes.values() if s.status == "Carregando"]
+    if sessoes_ativas:
+        potencia_por_carro = gerenciador.potencia_maxima_rede / len(sessoes_ativas)
+        for sessao in sessoes_ativas:
+            for _ in range(5):
+                if sessao.bateria_atual >= 100.0:
+                    sessao.status = "Concluído"
+                    break
+                import random
+                tensao = 220.0
+                corrente = 32.0
+                potencia_kw = min((tensao * corrente) / 1000, potencia_por_carro)
+                energia_ganha = potencia_kw / 3600
+                sessao.energia_injetada += energia_ganha
+                sessao.bateria_atual = min(100.0, sessao.bateria_atual + ((energia_ganha / sessao.capacidade) * 100))
+
+    apagar_terminal()
     sessoes = list(gerenciador.sessoes.values())
-    
     total_sessoes = len(sessoes)
     
     if total_sessoes == 0:
@@ -227,7 +244,8 @@ def gerar_relatorio(gerenciador):
         energia_total += energia
 
         try:
-            dados_tarifa = calcular_tarifa_inteligente(time.now())
+            from datetime import datetime
+            dados_tarifa = calcular_tarifa_inteligente(datetime.now())
             preco_kwh = dados_tarifa['preco_final_kwh']
         except:
             preco_kwh = 1.0  
