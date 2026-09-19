@@ -12,11 +12,7 @@ def inicializar_banco_de_dados():
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE NOT NULL,
-            senha TEXT NOT NULL,
-            endereco TEXT NOT NULL,
-            num_serie TEXT NOT NULL,
-            cod_verificacao TEXT NOT NULL,
-            tipo_estacao TEXT NOT NULL
+            senha TEXT NOT NULL
         )
     ''')
     conexao.commit()
@@ -76,7 +72,7 @@ def entrar_no_sistema():
             cursor.execute('''
                 INSERT INTO usuarios (email, senha, endereco, num_serie, cod_verificacao, tipo_estacao)
                 VALUES (?, ?, ?, ?, ?, ?)
-            ''', (criar_email, criar_senha, endereco, num_serie, cod_verificacao, tipo_estacao))
+            ''', (criar_email, criar_senha))
             conexao.commit()
             conexao.close()
             print('Conta criada com sucesso!')
@@ -154,26 +150,47 @@ def criar_gerenciador():
 	return gerenciador
 
 def rodar_sistema(gerenciador):
-	while True:
-		apagar_terminal()
-		print("="*15 + " PANEL CONTROL HCA G2 " + "="*15)
-		print("1. Conectar/Simular Entrada de Carro")
-		print("2. Ver Carregamento em Tempo Real (Monitoramento)")
-		print("3. Pagar e Liberar Vaga (Checkout)")
-		print("4. Sair do Sistema")
-		print("="*52)
-		
-		opcao = input("Escolha a opção: ")
-		if opcao == "1":
-			gerenciador.adicionar_veiculo()
-			input("\nPressione Enter para voltar ao menu...")
-		elif opcao == "2":
-			gerenciador.monitorar_tempo_real()
-		elif opcao == "3":
-			gerenciador.pagar_e_liberar_vaga()
-		elif opcao == "4":
-			print("Encerrando aplicação...")
-			break
-		else:
-			print("Opção inválida! Escolha de 1 a 4.")
-			tm.sleep(1)
+    while True:
+        apagar_terminal()
+        print("="*15 + " PANEL CONTROL HCA G2 " + "="*15)
+        print("1. Conectar/Simular Entrada de Carro")
+        print("2. Ver Carregamento em Tempo Real (Monitoramento)")
+        print("3. Pagar e Liberar Vaga (Checkout)")
+        print("4. Ordenar Sessão")
+        print("5. Sair do Sistema")
+        print("="*52)
+        
+        opcao = input("Escolha a opção: ")
+        if opcao == "1":
+            gerenciador.adicionar_veiculo()
+            input("\nPressione Enter para voltar ao menu...")
+        elif opcao == "2":
+            gerenciador.monitorar_tempo_real()
+        elif opcao == "3":
+            gerenciador.pagar_e_liberar_vaga()
+        elif opcao == "4":
+            gerenciador.ordenar_sessao()
+        elif opcao == "5":
+            print("Encerrando aplicação...")
+            break
+        else:
+            print("Opção inválida! Escolha de 1 a 5.")
+            tm.sleep(5)
+            apagar_terminal()
+
+def bubble_sort(lista_sessoes, chave):
+    n = len(lista_sessoes)
+    for i in range(n):
+        trocou = False
+        for j in range(n - 1 - i):
+            val1 = getattr(lista_sessoes[j], chave, 0)
+            val2 = getattr(lista_sessoes[j + 1], chave, 0)
+
+            val1 = 0 if val1 is None else val1
+            val2 = 0 if val2 is None else val2
+
+            if val1 > val2:
+                lista_sessoes[j], lista_sessoes[j + 1] = lista_sessoes[j + 1], lista_sessoes[j]
+                trocou = True
+        if not trocou:
+            break

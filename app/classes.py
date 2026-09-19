@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 import json
 import time as tm
-from app.functions import calcular_tarifa_inteligente, apagar_terminal
+from app.functions import calcular_tarifa_inteligente, apagar_terminal, bubble_sort
 
 class SessaoRecarga:
 	def __init__(self, id_sessao, veiculo, bateria_inicial):
@@ -13,6 +13,7 @@ class SessaoRecarga:
 		self.bateria_atual = float(bateria_inicial)
 		self.energia_injetada = 0.0
 		self.status = "Carregando"
+		self.energia_restante = ((100 - self.bateria_atual) / 100) * self.capacidade
 		self.ultima_atualizacao = datetime.now() 
 
 	def atualizar_acumulado(self, potencia_limite):
@@ -78,7 +79,7 @@ class GerenciadorEstacoes:
 				
 				for id_s, s in self.sessoes.items():
 					if s.status == "Carregando":
-						energia_restante = ((100 - s.bateria_atual) / 100) * s.capacity if hasattr(s, 'capacity') else ((100 - s.bateria_atual) / 100) * s.capacidade
+						energia_restante = ((100 - s.bateria_atual) / 100) * s.capacidade
 						tempo_restante_horas = energia_restante / potencia_vaga
 						tempo_str = f"{int(tempo_restante_horas * 60)} min restantes"
 					else:
@@ -158,3 +159,32 @@ class GerenciadorEstacoes:
 			print(f"\n✅ Pagamento processado! Vaga #{vaga_escolhida} está LIVRE e desocupada.")
 		else:
 			print("\n❌ Operação cancelada.")
+
+	def ordenar_sessao(self):
+		apagar_terminal()
+		print('Qual críterio você deseja usar para ordenar a sessão?')
+		print('1. Vaga')
+		print('2. Bateria atual')
+		print('3. Status')
+		print('4. Tempo restante de carregamento')
+		fator_ordenar = input('==> ').lower()
+		lista = list(self.sessoes.values())
+
+		chave_ordenacao = None
+
+		match fator_ordenar:
+			case '1' | 'vaga':
+				chave_ordenacao = 'id_sessao' 
+			case '2' | 'bateria atual' | 'bateria':
+				chave_ordenacao = 'bateria_atual'
+			case '3' | 'status':
+				chave_ordenacao = 'status'
+			case '4' | 'tempo restante de carregamento' | 'tempo' | 'energia restante':
+				chave_ordenacao = 'energia_restante'
+			case _:
+				print('Opção inválida!')
+				return
+
+		bubble_sort(lista, chave_ordenacao)
+		self.sessoes = {s.id_sessao: s for s in lista}
+		print('\nSessões ordenadas com sucesso!')
