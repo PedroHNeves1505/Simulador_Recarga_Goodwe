@@ -157,7 +157,8 @@ def rodar_sistema(gerenciador):
         print("2. Ver Carregamento em Tempo Real (Monitoramento)")
         print("3. Pagar e Liberar Vaga (Checkout)")
         print("4. Ordenar Sessão")
-        print("5. Sair do Sistema")
+        print("5. Buscar Sessão")
+        print("6. Sair do Sistema")
         print("="*52)
         
         opcao = input("Escolha a opção: ")
@@ -170,13 +171,16 @@ def rodar_sistema(gerenciador):
             gerenciador.pagar_e_liberar_vaga()
         elif opcao == "4":
             gerenciador.ordenar_sessao()
-        elif opcao == "5":
+        elif opcao == '5':
+            gerenciador.buscar_sessao()
+        elif opcao == "6":
             print("Encerrando aplicação...")
+            tm.sleep(5)
+            apagar_terminal()
             break
         else:
             print("Opção inválida! Escolha de 1 a 5.")
-            tm.sleep(5)
-            apagar_terminal()
+            tm.sleep(1)
 
 def bubble_sort(lista_sessoes, chave):
     n = len(lista_sessoes)
@@ -194,3 +198,10 @@ def bubble_sort(lista_sessoes, chave):
                 trocou = True
         if not trocou:
             break
+
+def busca_sequencial(vagas, vaga_procurada):
+    for i in range(len(vagas)):
+        if vagas[i].id_sessao == vaga_procurada:
+            return i
+
+    return -1

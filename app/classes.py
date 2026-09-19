@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 import json
 import time as tm
-from app.functions import calcular_tarifa_inteligente, apagar_terminal, bubble_sort
+from app.functions import calcular_tarifa_inteligente, apagar_terminal, bubble_sort, busca_sequencial
 
 class SessaoRecarga:
 	def __init__(self, id_sessao, veiculo, bateria_inicial):
@@ -188,3 +188,40 @@ class GerenciadorEstacoes:
 		bubble_sort(lista, chave_ordenacao)
 		self.sessoes = {s.id_sessao: s for s in lista}
 		print('\nSessões ordenadas com sucesso!')
+
+	def buscar_sessao(self):
+			apagar_terminal()
+			lista = list(self.sessoes.values())
+			
+			if not lista:
+				print("\n❌ Não há sessões ativas no momento.")
+				input("\nPressione Enter para voltar...")
+				return
+
+			print('Qual vaga você deseja procurar?')
+			vaga_procurada = int(input('==> '))
+
+			posicao = busca_sequencial(lista, vaga_procurada)
+
+			if posicao == -1 or posicao is None:
+				print("\n❌ Vaga não encontrada!")
+				input("\nPressione Enter para voltar...")
+				return
+
+			vaga = lista[posicao]
+
+			potencia_vaga = self.potencia_maxima_rede / max(len(lista), 1)
+		
+			if vaga.status == "Carregando":
+				energia_restante = ((100 - vaga.bateria_atual) / 100) * vaga.capacidade
+				tempo_restante_horas = energia_restante / potencia_vaga
+				tempo_str = f"{int(tempo_restante_horas * 60)} min restantes"
+			else:
+				tempo_str = "Pronto!"
+			
+			barra = "█" * int(vaga.bateria_atual / 10) + "-" * (10 - int(vaga.bateria_atual / 10))
+			
+			print(f"\nVaga #{vaga.id_sessao}: {vaga.marca} {vaga.modelo}")
+			print(f"  [{barra}] {vaga.bateria_atual:.1f}% | Status: {vaga.status} | Est: {tempo_str}")
+			
+			input("\nPressione Enter para voltar ao menu...")
