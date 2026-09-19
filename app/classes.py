@@ -105,61 +105,6 @@ class GerenciadorEstacoes:
 		print(f"\n⚡ [OCPP OUT] {json.dumps(mensagem, ensure_ascii=False, indent=2)}")
 		print("🔌 [OCPP IN] Confirmação recebida: [3, \"SUCCESS\"]")
 
-	def pagar_e_liberar_vaga(self):
-		apagar_terminal()
-		self.atualizar_todas_as_sessoes() 
-		sessoes_ativas = [id_s for id_s, s in self.sessoes.items() if s.status in ["Carregando", "Concluído"]]
-		
-		if not sessoes_ativas:
-			print("\n❌ Não há nenhum veículo ocupando as vagas no momento.")
-			input("\nPressione Enter para voltar...")
-			return
-
-		print("=== 💳 PAGAMENTO E LIBERAÇÃO DE VAGA ===")
-		for id_s in sessoes_ativas:
-			s = self.sessoes[id_s]
-			print(f"Vaga #{id_s}: {s.marca} {s.modelo} | Bateria: {s.bateria_atual:.1f}% | Status: {s.status}")
-		
-		try:
-			vaga_escolhida = int(input("\nDigite o número da vaga que deseja liberar e pagar: "))
-		except ValueError:
-			print("Entrada inválida!")
-			input("\nPressione Enter para voltar...")
-			return
-
-		if vaga_escolhida not in self.sessoes or self.sessoes[vaga_escolhida].status == "Liberado e Pago":
-			print("❌ Vaga inválida ou já liberada!")
-			input("\nPressione Enter para voltar...")
-			return
-
-		sessao = self.sessoes[vaga_escolhida]
-		
-		dados_tarifa = calcular_tarifa_inteligente(datetime.now())
-		preco_kwh = dados_tarifa['preco_final_kwh']
-		custo_total = sessao.energia_injetada * preco_kwh
-
-		apagar_terminal()
-		print('='*15 + ' RECIBO DE PAGAMENTO ' + '='*15)
-		print(f"Veículo:          {sessao.marca} {sessao.modelo}")
-		print(f"Energia Injetada: {sessao.energia_injetada:.2f} kWh")
-		print(f"Tarifa Aplicada:  R$ {preco_kwh:.2f}/kWh ({dados_tarifa['fluxo']})")
-		print(f"Total a Pagar:    R$ {custo_total:.2f}")
-		print('=' * 51)
-		
-		confirmar = input("\nConfirmar pagamento? (sim/não): ")
-		if confirmar.lower() == 'sim':
-			if hasattr(self, 'enviar_log_ocpp'):
-				self.enviar_log_ocpp("StopTransaction", {
-					"transactionId": sessao.id_sessao,
-					"meterStop": round(sessao.energia_injetada, 2),
-					"reason": "LocalDisconnect"
-				})
-			del self.sessoes[vaga_escolhida] 
-			
-			print(f"\n✅ Pagamento processado! Vaga #{vaga_escolhida} está LIVRE e desocupada.")
-		else:
-			print("\n❌ Operação cancelada.")
-
 	def ordenar_sessao(self):
 		apagar_terminal()
 		print('Qual críterio você deseja usar para ordenar a sessão?')

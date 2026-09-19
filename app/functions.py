@@ -155,10 +155,9 @@ def rodar_sistema(gerenciador):
         print("="*15 + " PANEL CONTROL HCA G2 " + "="*15)
         print("1. Conectar/Simular Entrada de Carro")
         print("2. Ver Carregamento em Tempo Real (Monitoramento)")
-        print("3. Pagar e Liberar Vaga (Checkout)")
-        print("4. Ordenar Sessão")
-        print("5. Buscar Sessão")
-        print("6. Exibir o Relatório e Sair do Sistema")
+        print("3. Ordenar Sessão")
+        print("4. Buscar Sessão")
+        print("5. Exibir o Relatório e Sair do Sistema")
         print("="*52)
         
         opcao = input("Escolha a opção: ")
@@ -168,12 +167,10 @@ def rodar_sistema(gerenciador):
         elif opcao == "2":
             gerenciador.monitorar_tempo_real()
         elif opcao == "3":
-            gerenciador.pagar_e_liberar_vaga()
-        elif opcao == "4":
             gerenciador.ordenar_sessao()
-        elif opcao == '5':
+        elif opcao == '4':
             gerenciador.buscar_sessao()
-        elif opcao == "6":
+        elif opcao == "5":
             gerar_relatorio(gerenciador)
             print("Encerrando aplicação...")
             tm.sleep(5)
