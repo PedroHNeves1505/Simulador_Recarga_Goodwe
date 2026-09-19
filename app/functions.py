@@ -158,7 +158,7 @@ def rodar_sistema(gerenciador):
         print("3. Pagar e Liberar Vaga (Checkout)")
         print("4. Ordenar Sessão")
         print("5. Buscar Sessão")
-        print("6. Sair do Sistema")
+        print("6. Exibir o Relatório e Sair do Sistema")
         print("="*52)
         
         opcao = input("Escolha a opção: ")
@@ -174,6 +174,7 @@ def rodar_sistema(gerenciador):
         elif opcao == '5':
             gerenciador.buscar_sessao()
         elif opcao == "6":
+            gerar_relatorio(gerenciador)
             print("Encerrando aplicação...")
             tm.sleep(5)
             apagar_terminal()
@@ -205,3 +206,57 @@ def busca_sequencial(vagas, vaga_procurada):
             return i
 
     return -1
+
+def gerar_relatorio(gerenciador):
+    apagar_terminal()
+
+    sessoes = list(gerenciador.sessoes.values())
+    
+    total_sessoes = len(sessoes)
+    
+    if total_sessoes == 0:
+        print('========= ESTATÍSTICAS =========\n')
+        print('Nenhuma sessão registrada para gerar estatísticas.')
+        input('\nPressione Enter para voltar ao menu...')
+        return
+
+    energia_total = 0.0
+    faturamento_total = 0.0
+    maior_consumo = float('-inf')
+    menor_consumo = float('inf')
+
+    for sessao in sessoes:
+        energia = getattr(sessao, 'energia_injetada', 0.0)
+        energia_total += energia
+
+        try:
+            dados_tarifa = calcular_tarifa_inteligente(time.now())
+            preco_kwh = dados_tarifa['preco_final_kwh']
+        except:
+            preco_kwh = 1.0  
+
+        custo_sessao = energia * preco_kwh
+        faturamento_total += custo_sessao
+
+        if energia > maior_consumo:
+            maior_consumo = energia
+        if energia < menor_consumo:
+            menor_consumo = energia
+
+    ticket_medio = faturamento_total / total_sessoes if total_sessoes > 0 else 0.0
+
+    if maior_consumo == float('-inf'):
+        maior_consumo = 0.0
+    if menor_consumo == float('inf'):
+        menor_consumo = 0.0
+
+    print('========= ESTATÍSTICAS =========')
+    print(f'Sessões realizadas: {total_sessoes}')
+    print(f'Energia Fornecida:  {energia_total:.2f} kWh')
+    print(f'Faturamento:        R$ {faturamento_total:.2f}')
+    print(f'Ticket médio:       R$ {ticket_medio:.2f}')
+    print(f'Maior consumo:      {maior_consumo:.2f} kWh')
+    print(f'Menor consumo:      {menor_consumo:.2f} kWh')
+    print('================================')
+    
+    input('\nPressione Enter para encerrar o programa...')
