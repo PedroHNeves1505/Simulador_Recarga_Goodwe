@@ -3,7 +3,6 @@ from app.classes import SessaoRecarga
 
 def run():
     inicializar_banco_de_dados()
-    mensagem_entrada()
     entrar_no_sistema()
     gerenciador = criar_gerenciador()
     rodar_sistema(gerenciador)

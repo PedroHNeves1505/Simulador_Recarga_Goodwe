@@ -28,61 +28,62 @@ def mensagem_entrada():
 
 
 def entrar_no_sistema():
-    print('\n' + ('=~' * 20))
-    print('1 - Já possuo uma conta.')
-    print('2 - Criar conta.')
-    try:
-        escolha_usuario = int(input('Escolha a opção: '))
-    except ValueError:
-        print('Entrada inválida! Digite 1 ou 2.')
-        sys.exit()
-
-    while escolha_usuario not in [1, 2]:
-        print('Opção inválida!')
-        input('Digite qualquer tecla para continuar: ')
-        apagar_terminal()
-        print('=~' * 20)
+    while True:
+        mensagem_entrada()
+        print('\n' + ('=~' * 20))
         print('1 - Já possuo uma conta.')
-        print('2 - Criar conta')
+        print('2 - Criar conta.')
         try:
             escolha_usuario = int(input('Escolha a opção: '))
         except ValueError:
             print('Entrada inválida! Digite 1 ou 2.')
             sys.exit()
 
-    if escolha_usuario == 2:
-        print('Antes de iniciar a criação da conta, certifique-se que o PowerGrid esteja conectado a uma rede Wi-Fi!\n')
+        while escolha_usuario not in [1, 2]:
+            print('Opção inválida!')
+            input('Digite qualquer tecla para continuar: ')
+            apagar_terminal()
+            print('=~' * 20)
+            print('1 - Já possuo uma conta.')
+            print('2 - Criar conta')
+            try:
+                escolha_usuario = int(input('Escolha a opção: '))
+            except ValueError:
+                print('Entrada inválida! Digite 1 ou 2.')
+                sys.exit()
 
-        apagar_terminal()
-        print('PERFIL DO USUÁRIO')
-        print('=~' * 20)
-        criar_email = input('Digite seu e-mail: ')
-        criar_senha = input('Digite a senha: ')
-        conf_senha = input('Digite novamente a senha: ')
+        if escolha_usuario == 2:
+            apagar_terminal()
+            print('PERFIL DO USUÁRIO')
+            print('=~' * 20)
+            criar_email = input('Digite seu e-mail: ')
+            criar_senha = input('Digite a senha: ')
+            conf_senha = input('Digite novamente a senha: ')
 
-        if criar_senha != conf_senha:
-            while criar_senha != conf_senha:
-                print('Senhas diferentes! Corrija.')
-                criar_senha = input('Digite a senha: ')
-                conf_senha = input('Digite novamente a senha: ')
+            if criar_senha != conf_senha:
+                while criar_senha != conf_senha:
+                    print('Senhas diferentes! Corrija.')
+                    criar_senha = input('Digite a senha: ')
+                    conf_senha = input('Digite novamente a senha: ')
 
-        try:
-            conexao = sqlite3.connect('usuarios.db')
-            cursor = conexao.cursor()
-            cursor.execute('''
-                INSERT INTO usuarios (email, senha, endereco, num_serie, cod_verificacao, tipo_estacao)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (criar_email, criar_senha))
-            conexao.commit()
-            conexao.close()
-            print('Conta criada com sucesso!')
-            tm.sleep(5)
-        except sqlite3.IntegrityError:
-            print('Erro: Este e-mail já está cadastrado!')
-            tm.sleep(3)
-            sys.exit()
-    else:
-        pass
+            try:
+                conexao = sqlite3.connect('usuarios.db')
+                cursor = conexao.cursor()
+                cursor.execute('''
+                    INSERT INTO usuarios (email, senha)
+                    VALUES (?, ?)
+                ''', (criar_email, criar_senha))
+                conexao.commit()
+                conexao.close()
+                print('Conta criada com sucesso!')
+                tm.sleep(5)
+                break
+            except sqlite3.IntegrityError:
+                print('Erro: Este e-mail já está cadastrado!')
+                tm.sleep(3)
+                apagar_terminal()
+        else:
+            break
 
     entrar = False
 
