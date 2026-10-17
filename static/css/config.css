@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+:root{
+    --cor_fundo: #1A1A1A; 
+    --cor_escrita: #34BF49;
+    --cor_escrita_card: #E6F0FA;
+    --cor_fundo_card: #808080;
+
+    --fonte_titulo: "Montserrat", sans-serif;
+    --fonte_texto: "Roboto", sans-serif;
+}

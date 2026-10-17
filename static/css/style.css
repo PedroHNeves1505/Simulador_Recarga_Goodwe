@@ -1,0 +1,71 @@
+@import url(../css/config.css);
+
+.content{
+    background-color: var(--cor_fundo);
+}
+
+.title{
+    color: var(--cor_escrita);
+    text-align: center;
+    font-family: var(--fonte_titulo);
+}
+
+.list{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 0; 
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;   
+}
+
+.list_item{
+    font-family: var(--fonte_texto);
+    color: var(--cor_escrita_card);
+    background-color: var(--cor_fundo_card);
+
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.login_options {
+    display: flex;     
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.login_options_option {
+    font-family: var(--fonte_texto);
+    color: var(--cor_escrita_card);
+    background-color: var(--cor_fundo_card);
+}
+
+.login_inputs.hidden {
+    display: none; 
+}
+
+.login_inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.login_inputs_input {
+    width: 300px;
+    max-width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+.hidden {
+    display: none;
+}
