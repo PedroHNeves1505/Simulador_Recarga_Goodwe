@@ -22,15 +22,21 @@
             </select>
         </div>
 
-        <button type="button" class="list_item" id="btn_buscar">4. Buscar Sessão</button>
+        <div class="list_group">
+            <button type="button" class="list_item group_btn" id="btn_buscar">4. Buscar Sessão</button>
+            <input type="number" id="input_vaga_busca" class="group_select" placeholder="Nº Vaga" min="1">
+        </div>
+
         <button type="button" class="list_item" id="btn_relatorio">5. Exibir o Relatório e Sair do Sistema</button>
     </div>
 
     <!-- Mensagem de feedback -->
     <p id="mensagem" class="mensagem_confirm"></p>
 
-    <!-- Tente carregar das duas formas comuns caso esteja em static/js/menu.js ou static/menu.js -->
-    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
-    <script src="{{ url_for('static', filename='menu.js') }}"></script>
+    <!-- Container do Card Buscado -->
+    <div id="container_resultado_busca" style="max-width: 400px; margin: 20px auto; width: 100%;"></div>
+
+    <!-- Importação correta do JS -->
+    <script src="../static/js/menu.js"></script>
 </body>
 </html>

@@ -124,5 +124,35 @@ def api_listar_sessoes():
 def monitoramento():
     return render_template('monitoramento.html')
 
+@app.route('/api/sessoes/buscar/<int:id_vaga>', methods=['GET'])
+def api_buscar_sessao(id_vaga):
+    gerenciador.atualizar_todas_as_sessoes()
+    
+    sessao = gerenciador.sessoes.get(id_vaga)
+    if not sessao:
+        return jsonify({"sucesso": False, "mensagem": "Vaga não encontrada ou sem veículo no momento."}), 404
+
+    sessoes_ativas = [s for s in gerenciador.sessoes.values() if s.status == "Carregando"]
+    potencia_vaga = gerenciador.potencia_maxima_rede / max(len(sessoes_ativas), 1)
+
+    if sessao.status == "Carregando":
+        energia_restante = ((100 - sessao.bateria_atual) / 100) * sessao.capacidade
+        tempo_restante_min = int((energia_restante / potencia_vaga) * 60)
+    else:
+        tempo_restante_min = 0
+
+    dados_sessao = {
+        "id": sessao.id_sessao,
+        "marca": sessao.marca,
+        "modelo": sessao.modelo,
+        "capacidade": sessao.capacidade,
+        "bateria_atual": round(sessao.bateria_atual, 1),
+        "energia_injetada": round(sessao.energia_injetada, 2),
+        "status": sessao.status,
+        "tempo_restante_min": tempo_restante_min
+    }
+
+    return jsonify({"sucesso": True, "sessao": dados_sessao})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

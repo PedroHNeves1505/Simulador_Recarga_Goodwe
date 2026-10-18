@@ -37,12 +37,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-left: 0; 
     margin: 20px auto;
     width: 100%;
-    max-width: 500px;   
-    position: relative;
-    z-index: 10;
+    max-width: 500px;
 }
 
 .list_item {
@@ -56,9 +53,7 @@ body {
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer !important;
-    pointer-events: auto !important; /* Força o elemento a aceitar cliques do rato */
-    position: relative;
-    z-index: 20;
+    pointer-events: auto !important;
     box-sizing: border-box;
 }
 
@@ -72,16 +67,12 @@ body {
     gap: 10px;
     width: 100%;
     box-sizing: border-box;
-    position: relative;
-    z-index: 20;
 }
 
 .group_btn {
     flex: 2;
     margin: 0 !important;
-    padding: 10px 15px;
 }
-
 /* Seletor da Opção 3 com fundo mais claro e alinhado */
 .group_select {
     flex: 1;
@@ -95,6 +86,7 @@ body {
     border: 1px solid #444;
     padding: 10px 5px;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .group_select option {
