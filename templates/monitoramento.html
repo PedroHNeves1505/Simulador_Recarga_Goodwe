@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title>Monitoramento em Tempo Real - Goodwe</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔋 Monitoramento em Tempo Real</h1>
+
+        <div id="grid-vagas" class="grid-vagas">
+            <!-- Os cards dos carros serão inseridos aqui dinamicamente pelo JS -->
+        </div>
+
+        <div class="actions">
+            <a href="/menu" class="btn-voltar">Voltar ao Menu Principal</a>
+        </div>
+    </div>
+
+    <script>
+        async function carregarSessoes() {
+            try {
+                const resposta = await fetch('/api/sessoes');
+                const dados = await resposta.json();
+                const grid = document.getElementById('grid-vagas');
+                grid.innerHTML = '';
+
+                if (!dados.sessoes || dados.sessoes.length === 0) {
+                    grid.innerHTML = '<p class="sem-veiculos">Nenhum veículo carregando no momento.</p>';
+                    return;
+                }
+
+                dados.sessoes.forEach(s => {
+                    const pct = s.bateria_atual;
+                    const tempoStr = s.status === 'Carregando' 
+                        ? `${s.tempo_restante_min} min restantes` 
+                        : 'Pronto!';
+
+                    const card = document.createElement('div');
+                    card.className = 'card-vaga';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span class="vaga-badge">Vaga #${s.id}</span>
+                            <span class="status-badge ${s.status === 'Concluído' ? 'concluido' : 'carregando'}">${s.status}</span>
+                        </div>
+                        <h2 class="carro-nome">${s.marca} ${s.modelo}</h2>
+                        <div class="bateria-info">
+                            <span>Bateria: ${pct.toFixed(1)}%</span>
+                            <span>${tempoStr}</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="card-detalhes">
+                            <p><strong>Energia Injetada:</strong> ${s.energia_injetada} kWh</p>
+                            <p><strong>Capacidade:</strong> ${s.capacidade} kWh</p>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (erro) {
+                console.error('Erro ao buscar sessões:', erro);
+            }
+        }
+
+        // Atualiza a cada 3 segundos em tempo real
+        carregarSessoes();
+        setInterval(carregarSessoes, 3000);
+    </script>
+</body>
+</html>

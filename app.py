@@ -75,5 +75,37 @@ def api_adicionar_veiculo():
         "mensagem": f"Veículo {carro.marca} {carro.modelo} conectado na Vaga #{ultimo_id}!"
     })
 
+@app.route('/api/sessoes', methods=['GET'])
+def api_listar_sessoes():
+    gerenciador.atualizar_todas_as_sessoes()
+    sessoes_data = []
+    sessoes_ativas = [s for s in gerenciador.sessoes.values() if s.status == "Carregando"]
+    potencia_vaga = gerenciador.potencia_maxima_rede / max(len(sessoes_ativas), 1)
+
+    # CORRIGIDO: mudado de .values() para .items() para desemacotar corretamente (id_s, s)
+    for id_s, s in gerenciador.sessoes.items():
+        if s.status == "Carregando":
+            energia_restante = ((100 - s.bateria_atual) / 100) * s.capacidade
+            tempo_restante_min = int((energia_restante / potencia_vaga) * 60)
+        else:
+            tempo_restante_min = 0
+
+        sessoes_data.append({
+            "id": s.id_sessao,
+            "marca": s.marca,
+            "modelo": s.modelo,
+            "capacidade": s.capacidade,
+            "bateria_atual": round(s.bateria_atual, 1),
+            "energia_injetada": round(s.energia_injetada, 2),
+            "status": s.status,
+            "tempo_restante_min": tempo_restante_min
+        })
+
+    return jsonify({"potencia_maxima_rede": gerenciador.potencia_maxima_rede, "sessoes": sessoes_data})
+    
+@app.route('/monitoramento')
+def monitoramento():
+    return render_template('monitoramento.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

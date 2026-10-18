@@ -77,3 +77,138 @@
     font-size: 1.2rem;
     text-align: center;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #ffffff;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.grid-vagas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card-vaga {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.vaga-badge {
+    background-color: #333;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.status-badge.carregando {
+    background-color: #2196F3;
+    color: #fff;
+}
+
+.status-badge.concluido {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.carro-nome {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #e0e0e0;
+}
+
+.bateria-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: #bbb;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 16px;
+    background-color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.5s ease-in-out;
+}
+
+.card-detalhes p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+.sem-veiculos {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 40px;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-voltar {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-voltar:hover {
+    background-color: #555;
+}
