@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnMonitoramento = document.getElementById('btn_monitoramento');
     const btnOrdenar = document.getElementById('btn_ordenar');
     const btnBuscar = document.getElementById('btn_buscar');
+    const btnRelatorio = document.getElementById('btn_relatorio');
     const inputVaga = document.getElementById('input_vaga_busca');
     const elementoMensagem = document.getElementById('mensagem');
     const containerResultado = document.getElementById('container_resultado_busca');
@@ -32,12 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 10000);
                 } else {
                     if (elementoMensagem) {
-                        elementoMensagem.innerText = 'Erro ao adicionar veículo.';
+                        elementoMensagem.innerText = dados.mensagem || 'Erro ao adicionar veículo.';
                         elementoMensagem.style.color = '#FF5252';
                     }
                 }
             } catch (erro) {
-                console.error('Erro:', erro);
+                console.error('Erro na Opção 1:', erro);
+                if (elementoMensagem) {
+                    elementoMensagem.innerText = 'Erro de conexão com o servidor.';
+                    elementoMensagem.style.color = '#FF5252';
+                }
             }
         });
     }
@@ -73,9 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     tempoParaSumirOrder = setTimeout(() => {
                         if (elementoMensagem) elementoMensagem.innerText = '';
                     }, 5000);
+                } else {
+                    if (elementoMensagem) {
+                        elementoMensagem.innerText = 'Erro ao ordenar sessões.';
+                        elementoMensagem.style.color = '#FF5252';
+                    }
                 }
             } catch (erro) {
-                console.error('Erro:', erro);
+                console.error('Erro na Opção 3:', erro);
+                if (elementoMensagem) {
+                    elementoMensagem.innerText = 'Erro de conexão com o servidor.';
+                    elementoMensagem.style.color = '#FF5252';
+                }
             }
         });
     }
@@ -132,7 +146,54 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (containerResultado) containerResultado.innerHTML = '';
                 }
             } catch (erro) {
-                console.error('Erro na busca:', erro);
+                console.error('Erro na Opção 4:', erro);
+                if (elementoMensagem) {
+                    elementoMensagem.innerText = 'Erro ao conectar com o servidor.';
+                    elementoMensagem.style.color = '#FF5252';
+                }
+            }
+        });
+    }
+
+    // Opção 5: Relatório Final
+    if (btnRelatorio) {
+        btnRelatorio.addEventListener('click', async () => {
+            try {
+                const resposta = await fetch('/api/relatorio/final');
+                const dados = await resposta.json();
+
+                if (resposta.ok && dados.sucesso) {
+                    if (elementoMensagem) {
+                        elementoMensagem.innerText = 'Relatório gerado com sucesso!';
+                        elementoMensagem.style.color = '#4CAF50';
+                    }
+
+                    if (containerResultado) {
+                        let htmlSessoes = dados.sessoes.map(s => `
+                            <div style="background: #1e1e1e; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #333;">
+                                <strong>Vaga #${s.id}</strong> - ${s.marca} ${s.modelo} <br>
+                                Status: ${s.status} | Bateria Final: ${s.bateria_final}% | Energia: ${s.energia_injetada} kWh
+                            </div>
+                        `).join('');
+
+                        containerResultado.innerHTML = `
+                            <div style="background: #161616; padding: 20px; border-radius: 8px; border: 1px solid #444; color: #fff;">
+                                <h3 style="color: #4CAF50; margin-bottom: 10px; text-align: center;">📊 Relatório Final do Posto</h3>
+                                <p><strong>Total de Veículos Atendidos:</strong> ${dados.total_veiculos}</p>
+                                <p style="margin-bottom: 15px;"><strong>Energia Total Injetada:</strong> ${dados.energia_total_geral} kWh</p>
+                                <h4 style="margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px;">Histórico das Vagas:</h4>
+                                ${htmlSessoes || '<p>Nenhuma sessão registrada.</p>'}
+                            </div>
+                        `;
+                    }
+                } else {
+                    if (elementoMensagem) {
+                        elementoMensagem.innerText = 'Erro ao gerar o relatório.';
+                        elementoMensagem.style.color = '#FF5252';
+                    }
+                }
+            } catch (erro) {
+                console.error('Erro na Opção 5:', erro);
             }
         });
     }

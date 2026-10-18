@@ -154,5 +154,29 @@ def api_buscar_sessao(id_vaga):
 
     return jsonify({"sucesso": True, "sessao": dados_sessao})
 
+@app.route('/api/relatorio/final', methods=['GET'])
+def api_relatorio_final():
+    gerenciador.atualizar_todas_as_sessoes()
+    
+    sessoes = list(gerenciador.sessoes.values())
+    total_veiculos = len(sessoes)
+    energia_total_geral = sum(s.energia_injetada for s in sessoes)
+    
+    detalhes_sessoes = [{
+        "id": s.id_sessao,
+        "marca": s.marca,
+        "modelo": s.modelo,
+        "bateria_final": round(s.bateria_atual, 1),
+        "energia_injetada": round(s.energia_injetada, 2),
+        "status": s.status
+    } for s in sessoes]
+
+    return jsonify({
+        "sucesso": True,
+        "total_veiculos": total_veiculos,
+        "energia_total_geral": round(energia_total_geral, 2),
+        "sessoes": detalhes_sessoes
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
