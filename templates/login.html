@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Login</title>
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body class="content">
     <h1 class="title" id="title">Login</h1>
+    
     <div class="login_options">    
-        <button id="show_signin" class='login_options_option'>Sign in</button>
-        <button id="show_signup" class='login_options_option'>Sign up</button>
+        <button id="show_signin" class="login_options_option">Sign in</button>
+        <button id="show_signup" class="login_options_option">Sign up</button>
     </div>
-    <div class="login_inputs input_signin hidden">
-        <input type="input" placeholder="E-mail" id="e-mail" class="login_inputs_input">
-        <input type="input" placeholder="Senha" id="senha" class="login_inputs_input">
-        <button class="login_inputs_enviar" id="enviar">Enviar</button>
+
+    <!-- Formulário de Sign In -->
+    <div id="box_signin" class="login_inputs input_signin hidden">
+        <input type="text" placeholder="E-mail" id="signin_email" class="login_inputs_input">
+        <input type="password" placeholder="Senha" id="signin_senha" class="login_inputs_input">
+        <button class="login_inputs_enviar" id="btn_signin">Enviar</button>
     </div>
-    <div class="login_inputs input_signup hidden">
-        <input type="input" placeholder="E-mail" id="e-mail" class="login_inputs_input">
-        <input type="input" placeholder="Senha" id="senha" class="login_inputs_input">
-        <input type="input" placeholder="Confirme sua Senha" id="confirm_senha" class="login_inputs_input">
-        <button class="login_inputs_enviar" id="enviar">Enviar</button>
+
+    <!-- Formulário de Sign Up -->
+    <div id="box_signup" class="login_inputs input_signup hidden">
+        <input type="text" placeholder="E-mail" id="signup_email" class="login_inputs_input">
+        <input type="password" placeholder="Senha" id="signup_senha" class="login_inputs_input">
+        <input type="password" placeholder="Confirme sua Senha" id="signup_confirm_senha" class="login_inputs_input">
+        <button class="login_inputs_enviar" id="btn_signup">Enviar</button>
     </div>
+
+    <script src="../static/js/script.js"></script>
 </body>
-<script src="../assets/script.js"></script>
 </html>
