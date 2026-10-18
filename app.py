@@ -75,14 +75,23 @@ def api_adicionar_veiculo():
         "mensagem": f"Veículo {carro.marca} {carro.modelo} conectado na Vaga #{ultimo_id}!"
     })
 
+# Variável global para armazenar o critério de ordenação atual
+criterio_atual = 'id'
+
+@app.route('/api/sessoes/ordenar', methods=['POST'])
+def api_ordenar_sessoes():
+    global criterio_atual
+    dados = request.get_json()
+    criterio_atual = dados.get('criterio', 'id')
+    return jsonify({"sucesso": True, "mensagem": "Sessões ordenadas com sucesso!"})
+
 @app.route('/api/sessoes', methods=['GET'])
 def api_listar_sessoes():
-    gerenciador.atualizar_todas_as_sessoes()
+    gerenciador.atualizar_todas_as_as_sessoes() if hasattr(gerenciador, 'atualizar_todas_as_as_sessoes') else gerenciador.atualizar_todas_as_sessoes()
     sessoes_data = []
     sessoes_ativas = [s for s in gerenciador.sessoes.values() if s.status == "Carregando"]
     potencia_vaga = gerenciador.potencia_maxima_rede / max(len(sessoes_ativas), 1)
 
-    # CORRIGIDO: mudado de .values() para .items() para desemacotar corretamente (id_s, s)
     for id_s, s in gerenciador.sessoes.items():
         if s.status == "Carregando":
             energia_restante = ((100 - s.bateria_atual) / 100) * s.capacidade
@@ -100,6 +109,14 @@ def api_listar_sessoes():
             "status": s.status,
             "tempo_restante_min": tempo_restante_min
         })
+
+    # Aplica a ordenação escolhida no menu
+    if criterio_atual == 'bateria':
+        sessoes_data.sort(key=lambda x: x['bateria_atual'], reverse=True)
+    elif criterio_atual == 'energia':
+        sessoes_data.sort(key=lambda x: x['energia_injetada'], reverse=True)
+    else:
+        sessoes_data.sort(key=lambda x: x['id'])
 
     return jsonify({"potencia_maxima_rede": gerenciador.potencia_maxima_rede, "sessoes": sessoes_data})
     

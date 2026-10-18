@@ -10,17 +10,27 @@
     <h1 class="title">Simulador de Recarga Goodwe</h1>
 
     <div class="list">
-        <button class="list_item" id="btn_adicionar_carro">1. Conectar/Simular Entrada de Carro</button>
-        <button class="list_item" id="btn_monitoramento">2. Ver Carregamento em Tempo Real (Monitoramento)</button>
-        <button class="list_item" id="btn_ordenar">3. Ordenar Sessão</button>
-        <button class="list_item" id="btn_buscar">4. Buscar Sessão</button>
-        <button class="list_item" id="btn_relatorio">5. Exibir o Relatório e Sair do Sistema</button>
+        <button type="button" class="list_item" id="btn_adicionar_carro">1. Conectar/Simular Entrada de Carro</button>
+        <button type="button" class="list_item" id="btn_monitoramento">2. Ver Carregamento em Tempo Real (Monitoramento)</button>
+        
+        <div class="list_group">
+            <button type="button" class="list_item group_btn" id="btn_ordenar">3. Ordenar Sessão</button>
+            <select id="criterio_ordenacao" class="group_select">
+                <option value="id">Por ID/Vaga</option>
+                <option value="bateria">Por % Bateria</option>
+                <option value="energia">Por Energia</option>
+            </select>
+        </div>
+
+        <button type="button" class="list_item" id="btn_buscar">4. Buscar Sessão</button>
+        <button type="button" class="list_item" id="btn_relatorio">5. Exibir o Relatório e Sair do Sistema</button>
     </div>
 
-    <!-- Mensagem de confirmação abaixo das opções -->
-    <p id="mensagem" class="mensagem_confirm""></p>
+    <!-- Mensagem de feedback -->
+    <p id="mensagem" class="mensagem_confirm"></p>
 
-    <!-- Script de controle do Menu -->
-    <script src="..//static/js/menu.js"></script>
+    <!-- Tente carregar das duas formas comuns caso esteja em static/js/menu.js ou static/menu.js -->
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='menu.js') }}"></script>
 </body>
 </html>

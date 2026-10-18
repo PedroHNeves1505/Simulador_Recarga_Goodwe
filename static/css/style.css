@@ -1,39 +1,110 @@
 @import url(../css/config.css);
 
-.content{
+/* --- Configurações Globais --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--cor_fundo, #121212);
+    color: var(--cor_escrita, #ffffff);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.content {
     background-color: var(--cor_fundo);
 }
 
-.title{
-    color: var(--cor_escrita);
-    text-align: center;
-    font-family: var(--fonte_titulo);
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-.list{
+.title {
+    text-align: center;
+    color: var(--cor_escrita, #4CAF50);
+    font-family: var(--fonte_titulo);
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+/* --- Listas e Menus --- */
+.list {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     padding-left: 0; 
-    margin: 0 auto;
+    margin: 20px auto;
     width: 100%;
-    max-width: 600px;   
+    max-width: 500px;   
+    position: relative;
+    z-index: 10;
 }
 
-.list_item{
+.list_item {
     font-family: var(--fonte_texto);
     color: var(--cor_escrita_card);
     background-color: var(--cor_fundo_card);
-
     width: 100%;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
     text-align: center;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer !important;
+    pointer-events: auto !important; /* Força o elemento a aceitar cliques do rato */
+    position: relative;
+    z-index: 20;
+    box-sizing: border-box;
 }
 
+.list_item:hover {
+    filter: brightness(1.2);
+}
+
+/* --- Grupo da Opção 3 (Alinhado com a largura dos outros itens) --- */
+.list_group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 20;
+}
+
+.group_btn {
+    flex: 2;
+    margin: 0 !important;
+    padding: 10px 15px;
+}
+
+/* Seletor da Opção 3 com fundo mais claro e alinhado */
+.group_select {
+    flex: 1;
+    margin: 0 !important;
+    background-color: #2b2b2b !important;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    outline: none;
+    border: 1px solid #444;
+    padding: 10px 5px;
+    border-radius: 4px;
+}
+
+.group_select option {
+    background-color: #2b2b2b;
+    color: #ffffff;
+}
+
+/* --- Telas de Login e Cadastro --- */
 .login_options {
-    display: flex;     
+    display: flex;    
     justify-content: center;
     align-items: center;
     gap: 15px;
@@ -45,10 +116,6 @@
     background-color: var(--cor_fundo_card);
 }
 
-.login_inputs.hidden {
-    display: none; 
-}
-
 .login_inputs {
     display: flex;
     flex-direction: column;
@@ -56,6 +123,10 @@
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+}
+
+.login_inputs.hidden {
+    display: none; 
 }
 
 .login_inputs_input {
@@ -78,32 +149,7 @@
     text-align: center;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background-color: #121212;
-    color: #ffffff;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.title {
-    text-align: center;
-    color: #4CAF50;
-    margin-bottom: 30px;
-    font-size: 2rem;
-}
-
+/* --- Estilos de Monitoramento e Cards --- */
 .grid-vagas {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
