@@ -69,3 +69,11 @@
 .hidden {
     display: none;
 }
+
+.mensagem_confirm {
+    color: var(--cor_escrita);
+    font-family: var(--fonte_texto);
+    margin-top: 20px;
+    font-size: 1.2rem;
+    text-align: center;
+}

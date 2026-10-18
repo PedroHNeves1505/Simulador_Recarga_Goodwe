@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Posto Elétrico Goodwe</title>
 </head>
 <body class="content">
     <h1 class="title">Simulador de Recarga Goodwe</h1>
 
-    <ol class="list">
-        <input class="list_item" type="submit" value="1. Conectar/Simular Entrada de Carro">
-        <input class="list_item" type="submit" value="2. Ver Carregamento em Tempo Real (Monitoramento)">
-        <input class="list_item" type="submit" value="3. Ordenar Sessão">
-        <input class="list_item" type="submit" value="4. Buscar Sessão">
-        <input class="list_item" type="submit" value="5. Exibir o Relatório e Sair do Sistema">
-    </ol>
+    <div class="list">
+        <button class="list_item" id="btn_adicionar_carro">1. Conectar/Simular Entrada de Carro</button>
+        <button class="list_item" id="btn_monitoramento">2. Ver Carregamento em Tempo Real (Monitoramento)</button>
+        <button class="list_item" id="btn_ordenar">3. Ordenar Sessão</button>
+        <button class="list_item" id="btn_buscar">4. Buscar Sessão</button>
+        <button class="list_item" id="btn_relatorio">5. Exibir o Relatório e Sair do Sistema</button>
+    </div>
+
+    <!-- Mensagem de confirmação abaixo das opções -->
+    <p id="mensagem" class="mensagem_confirm""></p>
+
+    <!-- Script de controle do Menu -->
+    <script src="..//static/js/menu.js"></script>
 </body>
 </html>

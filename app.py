@@ -65,5 +65,15 @@ def api_login():
     except Exception as e:
         return jsonify({"sucesso": False, "mensagem": f"Erro no servidor: {str(e)}"}), 500
 
+@app.route('/api/sessoes/adicionar', methods=['POST'])
+def api_adicionar_veiculo():
+    gerenciador.adicionar_veiculo()
+    ultimo_id = gerenciador.contador_ids - 1
+    carro = gerenciador.sessoes[ultimo_id]
+    return jsonify({
+        "sucesso": True, 
+        "mensagem": f"Veículo {carro.marca} {carro.modelo} conectado na Vaga #{ultimo_id}!"
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
